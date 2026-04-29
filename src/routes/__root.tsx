@@ -47,6 +47,10 @@ export const Route = createRootRoute({
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: "Camponês — Do campo direto para sua mesa" },
+      { name: "description", content: "Produtos agroecológicos" },
+      { property: "og:description", content: "Produtos agroecológicos" },
+      { name: "twitter:description", content: "Produtos agroecológicos" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
