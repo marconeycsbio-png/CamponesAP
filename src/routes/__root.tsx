@@ -51,6 +51,8 @@ export const Route = createRootRoute({
       { name: "description", content: "Produtos agroecológicos" },
       { property: "og:description", content: "Produtos agroecológicos" },
       { name: "twitter:description", content: "Produtos agroecológicos" },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/1a80424a-c251-44be-bee0-6ae0dcd46b26/id-preview-0a71ac4f--8578e84f-31bb-460c-9b14-47bbb0f51435.lovable.app-1777464076180.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/1a80424a-c251-44be-bee0-6ae0dcd46b26/id-preview-0a71ac4f--8578e84f-31bb-460c-9b14-47bbb0f51435.lovable.app-1777464076180.png" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
