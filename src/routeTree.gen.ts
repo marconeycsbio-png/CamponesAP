@@ -9,8 +9,68 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as ProdutosRouteImport } from './routes/produtos'
+import { Route as ProdutoresRouteImport } from './routes/produtores'
+import { Route as ProdutorRouteImport } from './routes/produtor'
+import { Route as LoginRouteImport } from './routes/login'
+import { Route as ConfirmacaoRouteImport } from './routes/confirmacao'
+import { Route as ComoFuncionaRouteImport } from './routes/como-funciona'
+import { Route as CheckoutRouteImport } from './routes/checkout'
+import { Route as ChatRouteImport } from './routes/chat'
+import { Route as CarrinhoRouteImport } from './routes/carrinho'
+import { Route as CadastroRouteImport } from './routes/cadastro'
 import { Route as IndexRouteImport } from './routes/index'
 
+const ProdutosRoute = ProdutosRouteImport.update({
+  id: '/produtos',
+  path: '/produtos',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProdutoresRoute = ProdutoresRouteImport.update({
+  id: '/produtores',
+  path: '/produtores',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProdutorRoute = ProdutorRouteImport.update({
+  id: '/produtor',
+  path: '/produtor',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ConfirmacaoRoute = ConfirmacaoRouteImport.update({
+  id: '/confirmacao',
+  path: '/confirmacao',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ComoFuncionaRoute = ComoFuncionaRouteImport.update({
+  id: '/como-funciona',
+  path: '/como-funciona',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CheckoutRoute = CheckoutRouteImport.update({
+  id: '/checkout',
+  path: '/checkout',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ChatRoute = ChatRouteImport.update({
+  id: '/chat',
+  path: '/chat',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CarrinhoRoute = CarrinhoRouteImport.update({
+  id: '/carrinho',
+  path: '/carrinho',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CadastroRoute = CadastroRouteImport.update({
+  id: '/cadastro',
+  path: '/cadastro',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -19,28 +79,172 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/cadastro': typeof CadastroRoute
+  '/carrinho': typeof CarrinhoRoute
+  '/chat': typeof ChatRoute
+  '/checkout': typeof CheckoutRoute
+  '/como-funciona': typeof ComoFuncionaRoute
+  '/confirmacao': typeof ConfirmacaoRoute
+  '/login': typeof LoginRoute
+  '/produtor': typeof ProdutorRoute
+  '/produtores': typeof ProdutoresRoute
+  '/produtos': typeof ProdutosRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/cadastro': typeof CadastroRoute
+  '/carrinho': typeof CarrinhoRoute
+  '/chat': typeof ChatRoute
+  '/checkout': typeof CheckoutRoute
+  '/como-funciona': typeof ComoFuncionaRoute
+  '/confirmacao': typeof ConfirmacaoRoute
+  '/login': typeof LoginRoute
+  '/produtor': typeof ProdutorRoute
+  '/produtores': typeof ProdutoresRoute
+  '/produtos': typeof ProdutosRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/cadastro': typeof CadastroRoute
+  '/carrinho': typeof CarrinhoRoute
+  '/chat': typeof ChatRoute
+  '/checkout': typeof CheckoutRoute
+  '/como-funciona': typeof ComoFuncionaRoute
+  '/confirmacao': typeof ConfirmacaoRoute
+  '/login': typeof LoginRoute
+  '/produtor': typeof ProdutorRoute
+  '/produtores': typeof ProdutoresRoute
+  '/produtos': typeof ProdutosRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/cadastro'
+    | '/carrinho'
+    | '/chat'
+    | '/checkout'
+    | '/como-funciona'
+    | '/confirmacao'
+    | '/login'
+    | '/produtor'
+    | '/produtores'
+    | '/produtos'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/cadastro'
+    | '/carrinho'
+    | '/chat'
+    | '/checkout'
+    | '/como-funciona'
+    | '/confirmacao'
+    | '/login'
+    | '/produtor'
+    | '/produtores'
+    | '/produtos'
+  id:
+    | '__root__'
+    | '/'
+    | '/cadastro'
+    | '/carrinho'
+    | '/chat'
+    | '/checkout'
+    | '/como-funciona'
+    | '/confirmacao'
+    | '/login'
+    | '/produtor'
+    | '/produtores'
+    | '/produtos'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  CadastroRoute: typeof CadastroRoute
+  CarrinhoRoute: typeof CarrinhoRoute
+  ChatRoute: typeof ChatRoute
+  CheckoutRoute: typeof CheckoutRoute
+  ComoFuncionaRoute: typeof ComoFuncionaRoute
+  ConfirmacaoRoute: typeof ConfirmacaoRoute
+  LoginRoute: typeof LoginRoute
+  ProdutorRoute: typeof ProdutorRoute
+  ProdutoresRoute: typeof ProdutoresRoute
+  ProdutosRoute: typeof ProdutosRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/produtos': {
+      id: '/produtos'
+      path: '/produtos'
+      fullPath: '/produtos'
+      preLoaderRoute: typeof ProdutosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/produtores': {
+      id: '/produtores'
+      path: '/produtores'
+      fullPath: '/produtores'
+      preLoaderRoute: typeof ProdutoresRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/produtor': {
+      id: '/produtor'
+      path: '/produtor'
+      fullPath: '/produtor'
+      preLoaderRoute: typeof ProdutorRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/confirmacao': {
+      id: '/confirmacao'
+      path: '/confirmacao'
+      fullPath: '/confirmacao'
+      preLoaderRoute: typeof ConfirmacaoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/como-funciona': {
+      id: '/como-funciona'
+      path: '/como-funciona'
+      fullPath: '/como-funciona'
+      preLoaderRoute: typeof ComoFuncionaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/checkout': {
+      id: '/checkout'
+      path: '/checkout'
+      fullPath: '/checkout'
+      preLoaderRoute: typeof CheckoutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/chat': {
+      id: '/chat'
+      path: '/chat'
+      fullPath: '/chat'
+      preLoaderRoute: typeof ChatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/carrinho': {
+      id: '/carrinho'
+      path: '/carrinho'
+      fullPath: '/carrinho'
+      preLoaderRoute: typeof CarrinhoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/cadastro': {
+      id: '/cadastro'
+      path: '/cadastro'
+      fullPath: '/cadastro'
+      preLoaderRoute: typeof CadastroRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -53,6 +257,16 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  CadastroRoute: CadastroRoute,
+  CarrinhoRoute: CarrinhoRoute,
+  ChatRoute: ChatRoute,
+  CheckoutRoute: CheckoutRoute,
+  ComoFuncionaRoute: ComoFuncionaRoute,
+  ConfirmacaoRoute: ConfirmacaoRoute,
+  LoginRoute: LoginRoute,
+  ProdutorRoute: ProdutorRoute,
+  ProdutoresRoute: ProdutoresRoute,
+  ProdutosRoute: ProdutosRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
