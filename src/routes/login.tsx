@@ -1,9 +1,11 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { useState } from "react";
 import { Sprout } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
 import heroImg from "@/assets/hero-harvest.jpg";
 
 export const Route = createFileRoute("/login")({
@@ -12,6 +14,24 @@ export const Route = createFileRoute("/login")({
 });
 
 function LoginPage() {
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    setLoading(false);
+    if (error) {
+      toast.error(error.message === "Invalid login credentials" ? "E-mail ou senha incorretos" : error.message);
+      return;
+    }
+    toast.success("Bem-vindo de volta!");
+    navigate({ to: "/" });
+  };
+
   return (
     <div className="grid min-h-[calc(100vh-5rem)] md:grid-cols-2">
       <div className="relative hidden md:block">
@@ -29,38 +49,25 @@ function LoginPage() {
       </div>
 
       <div className="flex items-center justify-center p-6 md:p-12">
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            toast.success("Login simulado — bem-vindo!");
-          }}
-          className="w-full max-w-sm space-y-5"
-        >
+        <form onSubmit={handleSubmit} className="w-full max-w-sm space-y-5">
           <div>
             <h1 className="font-display text-3xl">Entrar</h1>
-            <p className="mt-1 text-sm text-muted-foreground">
-              Acesse sua conta para fazer pedidos.
-            </p>
+            <p className="mt-1 text-sm text-muted-foreground">Acesse sua conta para fazer pedidos.</p>
           </div>
-
           <div>
             <Label htmlFor="email">E-mail</Label>
-            <Input id="email" type="email" required placeholder="voce@email.com" />
+            <Input id="email" type="email" required value={email} onChange={(e) => setEmail(e.target.value)} placeholder="voce@email.com" />
           </div>
           <div>
             <Label htmlFor="senha">Senha</Label>
-            <Input id="senha" type="password" required placeholder="••••••••" />
+            <Input id="senha" type="password" required value={password} onChange={(e) => setPassword(e.target.value)} placeholder="••••••••" />
           </div>
-
-          <Button type="submit" size="lg" className="w-full">
-            Entrar
+          <Button type="submit" size="lg" className="w-full" disabled={loading}>
+            {loading ? "Entrando..." : "Entrar"}
           </Button>
-
           <p className="text-center text-sm text-muted-foreground">
             Ainda não tem conta?{" "}
-            <Link to="/cadastro" className="font-medium text-primary hover:underline">
-              Cadastre-se
-            </Link>
+            <Link to="/cadastro" className="font-medium text-primary hover:underline">Cadastre-se</Link>
           </p>
         </form>
       </div>
