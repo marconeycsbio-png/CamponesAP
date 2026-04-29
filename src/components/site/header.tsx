@@ -1,8 +1,16 @@
-import { Link, useRouterState } from "@tanstack/react-router";
-import { ShoppingBasket, Menu, X, Search } from "lucide-react";
+import { Link, useRouterState, useNavigate } from "@tanstack/react-router";
+import { ShoppingBasket, Menu, X, Search, Shield, LogOut, User as UserIcon } from "lucide-react";
 import { useState } from "react";
 import { useCart } from "@/contexts/cart-context";
+import { useAuth } from "@/contexts/auth-context";
 import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import logo from "@/assets/logo.png";
 
 const NAV = [
@@ -14,8 +22,15 @@ const NAV = [
 
 export function Header() {
   const { count } = useCart();
+  const { user, isAdmin, isProducer, signOut } = useAuth();
   const [open, setOpen] = useState(false);
   const path = useRouterState({ select: (s) => s.location.pathname });
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    await signOut();
+    navigate({ to: "/" });
+  };
 
   return (
     <header className="sticky top-0 z-50 border-b border-border/60 bg-background/85 backdrop-blur-xl">
@@ -58,16 +73,43 @@ export function Header() {
               <Search className="h-5 w-5" />
             </Button>
           </Link>
-          <Link to="/login" className="hidden md:block">
-            <Button variant="ghost" size="sm">
-              Entrar
-            </Button>
-          </Link>
-          <Link to="/cadastro" className="hidden md:block">
-            <Button variant="default" size="sm">
-              Criar Conta
-            </Button>
-          </Link>
+
+          {!user ? (
+            <>
+              <Link to="/login" className="hidden md:block">
+                <Button variant="ghost" size="sm">Entrar</Button>
+              </Link>
+              <Link to="/cadastro" className="hidden md:block">
+                <Button variant="default" size="sm">Criar Conta</Button>
+              </Link>
+            </>
+          ) : (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="icon" className="hidden md:inline-flex">
+                  <UserIcon className="h-5 w-5" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-56">
+                <div className="px-2 py-1.5 text-xs text-muted-foreground truncate">{user.email}</div>
+                <DropdownMenuSeparator />
+                {isAdmin && (
+                  <DropdownMenuItem asChild>
+                    <Link to="/admin"><Shield className="mr-2 h-4 w-4" /> Painel admin</Link>
+                  </DropdownMenuItem>
+                )}
+                {isProducer && (
+                  <DropdownMenuItem asChild>
+                    <Link to="/produtor">Painel produtor</Link>
+                  </DropdownMenuItem>
+                )}
+                <DropdownMenuItem onClick={handleLogout}>
+                  <LogOut className="mr-2 h-4 w-4" /> Sair
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          )}
+
           <Link to="/carrinho" aria-label="Carrinho" className="relative">
             <Button variant="ghost" size="icon">
               <ShoppingBasket className="h-5 w-5" />
@@ -79,11 +121,7 @@ export function Header() {
             )}
           </Link>
 
-          <button
-            className="lg:hidden"
-            onClick={() => setOpen((v) => !v)}
-            aria-label="Menu"
-          >
+          <button className="lg:hidden" onClick={() => setOpen((v) => !v)} aria-label="Menu">
             {open ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
           </button>
         </div>
@@ -102,13 +140,26 @@ export function Header() {
                 {item.label}
               </Link>
             ))}
+            {isAdmin && (
+              <Link to="/admin" onClick={() => setOpen(false)} className="rounded-md px-3 py-3 text-sm font-medium text-primary hover:bg-secondary">
+                🛡️ Painel admin
+              </Link>
+            )}
             <div className="mt-2 flex gap-2">
-              <Link to="/login" className="flex-1" onClick={() => setOpen(false)}>
-                <Button variant="outline" className="w-full">Entrar</Button>
-              </Link>
-              <Link to="/cadastro" className="flex-1" onClick={() => setOpen(false)}>
-                <Button className="w-full">Criar Conta</Button>
-              </Link>
+              {!user ? (
+                <>
+                  <Link to="/login" className="flex-1" onClick={() => setOpen(false)}>
+                    <Button variant="outline" className="w-full">Entrar</Button>
+                  </Link>
+                  <Link to="/cadastro" className="flex-1" onClick={() => setOpen(false)}>
+                    <Button className="w-full">Criar Conta</Button>
+                  </Link>
+                </>
+              ) : (
+                <Button variant="outline" className="w-full" onClick={handleLogout}>
+                  Sair
+                </Button>
+              )}
             </div>
           </nav>
         </div>
