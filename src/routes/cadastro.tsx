@@ -1,10 +1,11 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { Sprout } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
 import farmer from "@/assets/farmer-1.jpg";
 
 export const Route = createFileRoute("/cadastro")({
@@ -13,22 +14,58 @@ export const Route = createFileRoute("/cadastro")({
 });
 
 function CadastroPage() {
+  const navigate = useNavigate();
   const [role, setRole] = useState<"consumidor" | "produtor">("consumidor");
+  const [loading, setLoading] = useState(false);
+  const [name, setName] = useState("");
+  const [farmName, setFarmName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (password.length < 6) {
+      toast.error("A senha deve ter ao menos 6 caracteres.");
+      return;
+    }
+    setLoading(true);
+    const redirectUrl = `${window.location.origin}/`;
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        emailRedirectTo: redirectUrl,
+        data: { full_name: name },
+      },
+    });
+    if (error) {
+      setLoading(false);
+      toast.error(error.message.includes("already registered") ? "Este e-mail já está cadastrado." : error.message);
+      return;
+    }
+
+    // Se for produtor, cria a ficha (sem aguardar admin — auto-aprovado)
+    if (role === "produtor" && data.user) {
+      const { error: prodError } = await supabase.from("producers").insert({
+        user_id: data.user.id,
+        farm_name: farmName,
+        status: "ativo",
+      });
+      if (prodError) console.warn("erro ao criar ficha de produtor:", prodError.message);
+      // adiciona role 'produtor' (consumidor já vem por trigger)
+      // Nota: precisaria de uma função SECURITY DEFINER para inserir role do produtor.
+      // Por simplicidade do MVP, o admin promove via painel.
+    }
+
+    setLoading(false);
+    toast.success("Conta criada! Verifique seu e-mail (se exigido) e faça login.");
+    navigate({ to: "/login" });
+  };
 
   return (
     <div className="grid min-h-[calc(100vh-5rem)] md:grid-cols-2">
       <div className="flex items-center justify-center p-6 md:p-12">
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            toast.success(
-              role === "produtor"
-                ? "Cadastro de produtor enviado para análise!"
-                : "Conta criada! Bem-vindo ao Camponês.",
-            );
-          }}
-          className="w-full max-w-sm space-y-5"
-        >
+        <form onSubmit={handleSubmit} className="w-full max-w-sm space-y-5">
           <div>
             <h1 className="font-display text-3xl">Criar conta</h1>
             <p className="mt-1 text-sm text-muted-foreground">É grátis e leva menos de 1 minuto.</p>
@@ -53,32 +90,30 @@ function CadastroPage() {
 
           <div>
             <Label htmlFor="name">Nome</Label>
-            <Input id="name" required placeholder="Seu nome" />
+            <Input id="name" required value={name} onChange={(e) => setName(e.target.value)} placeholder="Seu nome" />
           </div>
           {role === "produtor" && (
             <div>
-              <Label htmlFor="farm">Nome da fazenda / propriedade</Label>
-              <Input id="farm" required placeholder="Sítio das Flores" />
+              <Label htmlFor="farm">Nome da propriedade</Label>
+              <Input id="farm" required value={farmName} onChange={(e) => setFarmName(e.target.value)} placeholder="Sítio das Flores" />
             </div>
           )}
           <div>
             <Label htmlFor="email2">E-mail</Label>
-            <Input id="email2" type="email" required placeholder="voce@email.com" />
+            <Input id="email2" type="email" required value={email} onChange={(e) => setEmail(e.target.value)} placeholder="voce@email.com" />
           </div>
           <div>
             <Label htmlFor="senha2">Senha</Label>
-            <Input id="senha2" type="password" required placeholder="••••••••" />
+            <Input id="senha2" type="password" required minLength={6} value={password} onChange={(e) => setPassword(e.target.value)} placeholder="mín. 6 caracteres" />
           </div>
 
-          <Button type="submit" size="lg" className="w-full">
-            Criar conta
+          <Button type="submit" size="lg" className="w-full" disabled={loading}>
+            {loading ? "Criando..." : "Criar conta"}
           </Button>
 
           <p className="text-center text-sm text-muted-foreground">
             Já tem conta?{" "}
-            <Link to="/login" className="font-medium text-primary hover:underline">
-              Entrar
-            </Link>
+            <Link to="/login" className="font-medium text-primary hover:underline">Entrar</Link>
           </p>
         </form>
       </div>
