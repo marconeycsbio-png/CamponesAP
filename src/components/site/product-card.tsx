@@ -1,14 +1,12 @@
 import { Link } from "@tanstack/react-router";
 import { Plus, MapPin, Star } from "lucide-react";
-import type { Product } from "@/data/mock";
-import { getProducer } from "@/data/mock";
+import type { Product, Producer } from "@/data/mock";
 import { useCart, formatBRL } from "@/contexts/cart-context";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 
-export function ProductCard({ product }: { product: Product }) {
+export function ProductCard({ product, producer }: { product: Product; producer?: Producer }) {
   const { add } = useCart();
-  const producer = getProducer(product.producerId);
 
   return (
     <article className="group relative overflow-hidden rounded-2xl bg-card shadow-[var(--shadow-soft)] hover-lift">
