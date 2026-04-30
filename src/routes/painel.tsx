@@ -1,6 +1,7 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState, useRef } from "react";
-import { Plus, Pencil, Trash2, Package, Upload, Loader2 } from "lucide-react";
+import { Plus, Pencil, Trash2, Package, Upload, Loader2, ExternalLink, Save, Image as ImageIcon } from "lucide-react";
+import { Link } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
