@@ -1,6 +1,7 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState, useRef } from "react";
-import { Plus, Pencil, Trash2, Package, Upload, Loader2 } from "lucide-react";
+import { Plus, Pencil, Trash2, Package, Upload, Loader2, ExternalLink, Save, Image as ImageIcon } from "lucide-react";
+import { Link } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -26,9 +27,9 @@ import {
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/auth-context";
-import { formatBRL } from "@/contexts/cart-context";
+import { formatBRL } from "@/lib/format";
 
-export const Route = createFileRoute("/produtor")({
+export const Route = createFileRoute("/painel")({
   component: ProdutorDashboard,
   head: () => ({ meta: [{ title: "Painel do produtor — Camponês" }] }),
 });
@@ -49,6 +50,13 @@ interface ProducerRow {
   id: string;
   farm_name: string;
   user_id: string | null;
+  description: string | null;
+  city: string | null;
+  state: string | null;
+  image_url: string | null;
+  whatsapp: string | null;
+  instagram: string | null;
+  email: string | null;
 }
 
 const emptyForm = {
@@ -73,6 +81,84 @@ function ProdutorDashboard() {
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const profileFileRef = useRef<HTMLInputElement>(null);
+  const [profileForm, setProfileForm] = useState({
+    farm_name: "",
+    description: "",
+    city: "",
+    state: "",
+    image_url: "" as string | null,
+    whatsapp: "",
+    instagram: "",
+    email: "",
+  });
+  const [savingProfile, setSavingProfile] = useState(false);
+  const [uploadingProfile, setUploadingProfile] = useState(false);
+
+  useEffect(() => {
+    if (producer) {
+      setProfileForm({
+        farm_name: producer.farm_name ?? "",
+        description: producer.description ?? "",
+        city: producer.city ?? "",
+        state: producer.state ?? "",
+        image_url: producer.image_url ?? "",
+        whatsapp: producer.whatsapp ?? "",
+        instagram: producer.instagram ?? "",
+        email: producer.email ?? "",
+      });
+    }
+  }, [producer]);
+
+  const handleProfileUpload = async (file: File) => {
+    if (!user) return;
+    setUploadingProfile(true);
+    const ext = file.name.split(".").pop() || "jpg";
+    const path = `${user.id}/profile-${crypto.randomUUID()}.${ext}`;
+    const { error } = await supabase.storage
+      .from("product-images")
+      .upload(path, file, { upsert: false, contentType: file.type });
+    if (error) {
+      toast.error("Erro ao enviar imagem: " + error.message);
+      setUploadingProfile(false);
+      return;
+    }
+    const { data } = supabase.storage.from("product-images").getPublicUrl(path);
+    setProfileForm((f) => ({ ...f, image_url: data.publicUrl }));
+    setUploadingProfile(false);
+    toast.success("Imagem enviada");
+  };
+
+  const handleSaveProfile = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!producer) return;
+    if (!profileForm.farm_name.trim()) {
+      toast.error("Informe o nome da fazenda.");
+      return;
+    }
+    setSavingProfile(true);
+    const { error } = await supabase
+      .from("producers")
+      .update({
+        farm_name: profileForm.farm_name.trim(),
+        description: profileForm.description.trim() || null,
+        city: profileForm.city.trim() || null,
+        state: profileForm.state.trim() || null,
+        image_url: profileForm.image_url || null,
+        whatsapp: profileForm.whatsapp.trim() || null,
+        instagram: profileForm.instagram.trim() || null,
+        email: profileForm.email.trim() || null,
+      })
+      .eq("id", producer.id);
+    setSavingProfile(false);
+    if (error) {
+      toast.error(error.message);
+    } else {
+      toast.success("Perfil atualizado");
+      loadData();
+    }
+  };
+
 
   useEffect(() => {
     if (authLoading) return;
@@ -90,7 +176,7 @@ function ProdutorDashboard() {
     // Busca a ficha de produtor; cria automaticamente se não houver
     let { data: prod } = await supabase
       .from("producers")
-      .select("id, farm_name, user_id")
+      .select("*")
       .eq("user_id", user.id)
       .maybeSingle();
 
@@ -102,7 +188,7 @@ function ProdutorDashboard() {
       const { data: created, error } = await supabase
         .from("producers")
         .insert({ user_id: user.id, farm_name: farmName, status: "ativo" })
-        .select("id, farm_name, user_id")
+        .select("*")
         .single();
       if (error) {
         toast.error("Não foi possível criar sua ficha de produtor: " + error.message);
@@ -226,9 +312,18 @@ function ProdutorDashboard() {
             Gerencie seus produtos — apenas você pode editar ou excluir.
           </p>
         </div>
-        <Button onClick={openCreate}>
-          <Plus className="h-4 w-4" /> Novo produto
-        </Button>
+        <div className="flex flex-wrap gap-2">
+          {producer && (
+            <Link to="/produtor/$producerId" params={{ producerId: producer.id }}>
+              <Button variant="outline">
+                <ExternalLink className="h-4 w-4" /> Ver minha página
+              </Button>
+            </Link>
+          )}
+          <Button onClick={openCreate}>
+            <Plus className="h-4 w-4" /> Novo produto
+          </Button>
+        </div>
       </div>
 
       <div className="grid gap-4 md:grid-cols-3">
@@ -244,6 +339,142 @@ function ProdutorDashboard() {
           </div>
         </div>
       </div>
+
+      {/* Perfil público */}
+      <form
+        onSubmit={handleSaveProfile}
+        className="mt-8 rounded-3xl bg-card p-6 shadow-[var(--shadow-soft)]"
+      >
+        <div className="mb-5 flex items-center justify-between gap-3">
+          <div>
+            <h2 className="font-display text-2xl">Meu perfil público</h2>
+            <p className="text-sm text-muted-foreground">
+              Essas informações aparecem para os consumidores na sua página.
+            </p>
+          </div>
+          <Button type="submit" disabled={savingProfile}>
+            {savingProfile ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
+            Salvar perfil
+          </Button>
+        </div>
+
+        <div className="grid gap-5 md:grid-cols-[160px_1fr]">
+          <div>
+            <Label className="mb-2 block">Foto / capa</Label>
+            <div className="flex flex-col items-center gap-2">
+              {profileForm.image_url ? (
+                <img
+                  src={profileForm.image_url}
+                  alt="Capa"
+                  className="h-32 w-32 rounded-2xl object-cover"
+                />
+              ) : (
+                <div className="flex h-32 w-32 items-center justify-center rounded-2xl bg-secondary">
+                  <ImageIcon className="h-8 w-8 text-muted-foreground" />
+                </div>
+              )}
+              <input
+                ref={profileFileRef}
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={(e) => {
+                  const f = e.target.files?.[0];
+                  if (f) handleProfileUpload(f);
+                }}
+              />
+              <Button
+                type="button"
+                size="sm"
+                variant="outline"
+                onClick={() => profileFileRef.current?.click()}
+                disabled={uploadingProfile}
+              >
+                {uploadingProfile ? <Loader2 className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4" />}
+                Trocar
+              </Button>
+            </div>
+          </div>
+
+          <div className="grid gap-4">
+            <div className="grid gap-3 md:grid-cols-2">
+              <div>
+                <Label htmlFor="pf-farm">Nome da fazenda</Label>
+                <Input
+                  id="pf-farm"
+                  value={profileForm.farm_name}
+                  onChange={(e) => setProfileForm({ ...profileForm, farm_name: e.target.value })}
+                  required
+                />
+              </div>
+              <div className="grid grid-cols-[1fr_80px] gap-2">
+                <div>
+                  <Label htmlFor="pf-city">Cidade</Label>
+                  <Input
+                    id="pf-city"
+                    value={profileForm.city}
+                    onChange={(e) => setProfileForm({ ...profileForm, city: e.target.value })}
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="pf-state">UF</Label>
+                  <Input
+                    id="pf-state"
+                    maxLength={2}
+                    value={profileForm.state}
+                    onChange={(e) =>
+                      setProfileForm({ ...profileForm, state: e.target.value.toUpperCase() })
+                    }
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <Label htmlFor="pf-desc">Sobre a fazenda</Label>
+              <Textarea
+                id="pf-desc"
+                rows={3}
+                placeholder="Conte sua história, o que cultiva, técnicas, certificações..."
+                value={profileForm.description}
+                onChange={(e) => setProfileForm({ ...profileForm, description: e.target.value })}
+              />
+            </div>
+
+            <div className="grid gap-3 md:grid-cols-3">
+              <div>
+                <Label htmlFor="pf-wpp">WhatsApp</Label>
+                <Input
+                  id="pf-wpp"
+                  placeholder="5511999998888"
+                  value={profileForm.whatsapp}
+                  onChange={(e) => setProfileForm({ ...profileForm, whatsapp: e.target.value })}
+                />
+              </div>
+              <div>
+                <Label htmlFor="pf-ig">Instagram</Label>
+                <Input
+                  id="pf-ig"
+                  placeholder="@suafazenda"
+                  value={profileForm.instagram}
+                  onChange={(e) => setProfileForm({ ...profileForm, instagram: e.target.value })}
+                />
+              </div>
+              <div>
+                <Label htmlFor="pf-email">E-mail de contato</Label>
+                <Input
+                  id="pf-email"
+                  type="email"
+                  placeholder="contato@suafazenda.com"
+                  value={profileForm.email}
+                  onChange={(e) => setProfileForm({ ...profileForm, email: e.target.value })}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+
 
       <div className="mt-8 rounded-3xl bg-card p-6 shadow-[var(--shadow-soft)]">
         <h2 className="mb-4 font-display text-2xl">Meus produtos</h2>

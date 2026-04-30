@@ -1,6 +1,5 @@
 import { Outlet, Link, createRootRoute, HeadContent, Scripts } from "@tanstack/react-router";
 import { Toaster } from "@/components/ui/sonner";
-import { CartProvider } from "@/contexts/cart-context";
 import { AuthProvider } from "@/contexts/auth-context";
 import { Header } from "@/components/site/header";
 import { Footer } from "@/components/site/footer";
@@ -34,26 +33,20 @@ export const Route = createRootRoute({
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Camponês — Do campo direto para sua mesa" },
+      { title: "Camponês — Conheça os produtores rurais da sua região" },
       {
         name: "description",
         content:
-          "Marketplace agrícola que conecta produtores rurais diretamente aos consumidores. Alimentos frescos, orgânicos e com origem rastreável.",
+          "Vitrine de produtores rurais e seus produtos. Encontre o produtor, veja o que ele oferece e fale direto com ele.",
       },
       { name: "author", content: "Camponês" },
-      { property: "og:title", content: "Camponês — Do campo direto para sua mesa" },
+      { property: "og:title", content: "Camponês — Conheça os produtores rurais da sua região" },
       {
         property: "og:description",
-        content: "Compre alimentos frescos diretamente de produtores rurais.",
+        content: "Vitrine de produtores rurais. Fale direto com quem cultiva o seu alimento.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:title", content: "Camponês — Do campo direto para sua mesa" },
-      { name: "description", content: "Produtos agroecológicos" },
-      { property: "og:description", content: "Produtos agroecológicos" },
-      { name: "twitter:description", content: "Produtos agroecológicos" },
-      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/1a80424a-c251-44be-bee0-6ae0dcd46b26/id-preview-0a71ac4f--8578e84f-31bb-460c-9b14-47bbb0f51435.lovable.app-1777464076180.png" },
-      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/1a80424a-c251-44be-bee0-6ae0dcd46b26/id-preview-0a71ac4f--8578e84f-31bb-460c-9b14-47bbb0f51435.lovable.app-1777464076180.png" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
@@ -87,16 +80,14 @@ function RootShell({ children }: { children: React.ReactNode }) {
 function RootComponent() {
   return (
     <AuthProvider>
-      <CartProvider>
-        <div className="flex min-h-screen flex-col bg-background">
-          <Header />
-          <main className="flex-1">
-            <Outlet />
-          </main>
-          <Footer />
-        </div>
-        <Toaster richColors position="top-center" />
-      </CartProvider>
+      <div className="flex min-h-screen flex-col bg-background">
+        <Header />
+        <main className="flex-1">
+          <Outlet />
+        </main>
+        <Footer />
+      </div>
+      <Toaster richColors position="top-center" />
     </AuthProvider>
   );
 }
