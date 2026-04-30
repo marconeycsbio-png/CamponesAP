@@ -10,7 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as ProdutoresRouteImport } from './routes/produtores'
-import { Route as ProdutorRouteImport } from './routes/produtor'
+import { Route as PainelRouteImport } from './routes/painel'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as ComoFuncionaRouteImport } from './routes/como-funciona'
 import { Route as CadastroRouteImport } from './routes/cadastro'
@@ -23,9 +23,9 @@ const ProdutoresRoute = ProdutoresRouteImport.update({
   path: '/produtores',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ProdutorRoute = ProdutorRouteImport.update({
-  id: '/produtor',
-  path: '/produtor',
+const PainelRoute = PainelRouteImport.update({
+  id: '/painel',
+  path: '/painel',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LoginRoute = LoginRouteImport.update({
@@ -65,7 +65,7 @@ export interface FileRoutesByFullPath {
   '/cadastro': typeof CadastroRoute
   '/como-funciona': typeof ComoFuncionaRoute
   '/login': typeof LoginRoute
-  '/produtor': typeof ProdutorRouteWithChildren
+  '/painel': typeof PainelRoute
   '/produtores': typeof ProdutoresRoute
   '/produtor/$producerId': typeof ProdutorProducerIdRoute
 }
@@ -75,7 +75,7 @@ export interface FileRoutesByTo {
   '/cadastro': typeof CadastroRoute
   '/como-funciona': typeof ComoFuncionaRoute
   '/login': typeof LoginRoute
-  '/produtor': typeof ProdutorRouteWithChildren
+  '/painel': typeof PainelRoute
   '/produtores': typeof ProdutoresRoute
   '/produtor/$producerId': typeof ProdutorProducerIdRoute
 }
@@ -86,7 +86,7 @@ export interface FileRoutesById {
   '/cadastro': typeof CadastroRoute
   '/como-funciona': typeof ComoFuncionaRoute
   '/login': typeof LoginRoute
-  '/produtor': typeof ProdutorRouteWithChildren
+  '/painel': typeof PainelRoute
   '/produtores': typeof ProdutoresRoute
   '/produtor/$producerId': typeof ProdutorProducerIdRoute
 }
@@ -98,7 +98,7 @@ export interface FileRouteTypes {
     | '/cadastro'
     | '/como-funciona'
     | '/login'
-    | '/produtor'
+    | '/painel'
     | '/produtores'
     | '/produtor/$producerId'
   fileRoutesByTo: FileRoutesByTo
@@ -108,7 +108,7 @@ export interface FileRouteTypes {
     | '/cadastro'
     | '/como-funciona'
     | '/login'
-    | '/produtor'
+    | '/painel'
     | '/produtores'
     | '/produtor/$producerId'
   id:
@@ -118,7 +118,7 @@ export interface FileRouteTypes {
     | '/cadastro'
     | '/como-funciona'
     | '/login'
-    | '/produtor'
+    | '/painel'
     | '/produtores'
     | '/produtor/$producerId'
   fileRoutesById: FileRoutesById
@@ -129,7 +129,7 @@ export interface RootRouteChildren {
   CadastroRoute: typeof CadastroRoute
   ComoFuncionaRoute: typeof ComoFuncionaRoute
   LoginRoute: typeof LoginRoute
-  ProdutorRoute: typeof ProdutorRouteWithChildren
+  PainelRoute: typeof PainelRoute
   ProdutoresRoute: typeof ProdutoresRoute
 }
 
@@ -142,11 +142,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProdutoresRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/produtor': {
-      id: '/produtor'
-      path: '/produtor'
-      fullPath: '/produtor'
-      preLoaderRoute: typeof ProdutorRouteImport
+    '/painel': {
+      id: '/painel'
+      path: '/painel'
+      fullPath: '/painel'
+      preLoaderRoute: typeof PainelRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/login': {
@@ -194,25 +194,13 @@ declare module '@tanstack/react-router' {
   }
 }
 
-interface ProdutorRouteChildren {
-  ProdutorProducerIdRoute: typeof ProdutorProducerIdRoute
-}
-
-const ProdutorRouteChildren: ProdutorRouteChildren = {
-  ProdutorProducerIdRoute: ProdutorProducerIdRoute,
-}
-
-const ProdutorRouteWithChildren = ProdutorRoute._addFileChildren(
-  ProdutorRouteChildren,
-)
-
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRoute,
   CadastroRoute: CadastroRoute,
   ComoFuncionaRoute: ComoFuncionaRoute,
   LoginRoute: LoginRoute,
-  ProdutorRoute: ProdutorRouteWithChildren,
+  PainelRoute: PainelRoute,
   ProdutoresRoute: ProdutoresRoute,
 }
 export const routeTree = rootRouteImport

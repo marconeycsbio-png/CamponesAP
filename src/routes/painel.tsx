@@ -28,7 +28,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/auth-context";
 import { formatBRL } from "@/lib/format";
 
-export const Route = createFileRoute("/produtor")({
+export const Route = createFileRoute("/painel")({
   component: ProdutorDashboard,
   head: () => ({ meta: [{ title: "Painel do produtor — Camponês" }] }),
 });
