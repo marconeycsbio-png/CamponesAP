@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { MapPin, Star, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { producers, products } from "@/data/mock";
+import { useMarketplaceData } from "@/hooks/use-marketplace-data";
 
 export const Route = createFileRoute("/produtores")({
   component: ProdutoresPage,
@@ -18,6 +18,7 @@ export const Route = createFileRoute("/produtores")({
 });
 
 function ProdutoresPage() {
+  const { producers, products } = useMarketplaceData();
   return (
     <div className="container mx-auto px-4 py-12 md:px-6 md:py-16">
       <div className="mb-12 max-w-2xl">

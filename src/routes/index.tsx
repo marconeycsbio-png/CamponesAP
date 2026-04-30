@@ -3,7 +3,7 @@ import { ArrowRight, Search, Sprout, Truck, ShieldCheck, Star } from "lucide-rea
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ProductCard } from "@/components/site/product-card";
-import { products, producers } from "@/data/mock";
+import { useMarketplaceData } from "@/hooks/use-marketplace-data";
 import heroImg from "@/assets/hero-harvest.jpg";
 
 export const Route = createFileRoute("/")({
@@ -21,7 +21,9 @@ export const Route = createFileRoute("/")({
 });
 
 function Index() {
+  const { products, producers } = useMarketplaceData();
   const featured = products.slice(0, 4);
+  const featuredProducers = producers.slice(0, 3);
 
   return (
     <>
@@ -123,7 +125,7 @@ function Index() {
         </div>
 
         <div className="grid gap-6 md:grid-cols-3 stagger">
-          {producers.map((p) => (
+          {featuredProducers.map((p) => (
             <Link
               key={p.id}
               to="/produtores"
@@ -177,7 +179,11 @@ function Index() {
 
           <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4 stagger">
             {featured.map((p) => (
-              <ProductCard key={p.id} product={p} />
+              <ProductCard
+                key={p.id}
+                product={p}
+                producer={producers.find((pr) => pr.id === p.producerId)}
+              />
             ))}
           </div>
         </div>

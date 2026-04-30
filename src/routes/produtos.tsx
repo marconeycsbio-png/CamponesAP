@@ -4,7 +4,8 @@ import { Search, SlidersHorizontal } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { ProductCard } from "@/components/site/product-card";
-import { products, categories, type Category } from "@/data/mock";
+import { categories, type Category } from "@/data/mock";
+import { useMarketplaceData } from "@/hooks/use-marketplace-data";
 
 export const Route = createFileRoute("/produtos")({
   component: ProdutosPage,
@@ -24,6 +25,7 @@ function ProdutosPage() {
   const [query, setQuery] = useState("");
   const [active, setActive] = useState<Category | "Todos">("Todos");
   const [maxPrice, setMaxPrice] = useState(50);
+  const { products, producers } = useMarketplaceData();
 
   const filtered = useMemo(() => {
     return products.filter((p) => {
@@ -111,7 +113,11 @@ function ProdutosPage() {
       ) : (
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 stagger">
           {filtered.map((p) => (
-            <ProductCard key={p.id} product={p} />
+            <ProductCard
+              key={p.id}
+              product={p}
+              producer={producers.find((pr) => pr.id === p.producerId)}
+            />
           ))}
         </div>
       )}
