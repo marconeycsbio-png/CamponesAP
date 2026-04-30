@@ -49,6 +49,13 @@ interface ProducerRow {
   id: string;
   farm_name: string;
   user_id: string | null;
+  description: string | null;
+  city: string | null;
+  state: string | null;
+  image_url: string | null;
+  whatsapp: string | null;
+  instagram: string | null;
+  email: string | null;
 }
 
 const emptyForm = {
