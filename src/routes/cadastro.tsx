@@ -35,7 +35,7 @@ function CadastroPage() {
       password,
       options: {
         emailRedirectTo: redirectUrl,
-        data: { full_name: name },
+        data: { full_name: name, signup_role: role },
       },
     });
     if (error) {
