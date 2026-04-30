@@ -16,6 +16,7 @@ import { Route as ComoFuncionaRouteImport } from './routes/como-funciona'
 import { Route as CadastroRouteImport } from './routes/cadastro'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ProdutorProducerIdRouteImport } from './routes/produtor.$producerId'
 
 const ProdutoresRoute = ProdutoresRouteImport.update({
   id: '/produtores',
@@ -52,6 +53,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ProdutorProducerIdRoute = ProdutorProducerIdRouteImport.update({
+  id: '/$producerId',
+  path: '/$producerId',
+  getParentRoute: () => ProdutorRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -59,8 +65,9 @@ export interface FileRoutesByFullPath {
   '/cadastro': typeof CadastroRoute
   '/como-funciona': typeof ComoFuncionaRoute
   '/login': typeof LoginRoute
-  '/produtor': typeof ProdutorRoute
+  '/produtor': typeof ProdutorRouteWithChildren
   '/produtores': typeof ProdutoresRoute
+  '/produtor/$producerId': typeof ProdutorProducerIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -68,8 +75,9 @@ export interface FileRoutesByTo {
   '/cadastro': typeof CadastroRoute
   '/como-funciona': typeof ComoFuncionaRoute
   '/login': typeof LoginRoute
-  '/produtor': typeof ProdutorRoute
+  '/produtor': typeof ProdutorRouteWithChildren
   '/produtores': typeof ProdutoresRoute
+  '/produtor/$producerId': typeof ProdutorProducerIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -78,8 +86,9 @@ export interface FileRoutesById {
   '/cadastro': typeof CadastroRoute
   '/como-funciona': typeof ComoFuncionaRoute
   '/login': typeof LoginRoute
-  '/produtor': typeof ProdutorRoute
+  '/produtor': typeof ProdutorRouteWithChildren
   '/produtores': typeof ProdutoresRoute
+  '/produtor/$producerId': typeof ProdutorProducerIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -91,6 +100,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/produtor'
     | '/produtores'
+    | '/produtor/$producerId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -100,6 +110,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/produtor'
     | '/produtores'
+    | '/produtor/$producerId'
   id:
     | '__root__'
     | '/'
@@ -109,6 +120,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/produtor'
     | '/produtores'
+    | '/produtor/$producerId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -117,7 +129,7 @@ export interface RootRouteChildren {
   CadastroRoute: typeof CadastroRoute
   ComoFuncionaRoute: typeof ComoFuncionaRoute
   LoginRoute: typeof LoginRoute
-  ProdutorRoute: typeof ProdutorRoute
+  ProdutorRoute: typeof ProdutorRouteWithChildren
   ProdutoresRoute: typeof ProdutoresRoute
 }
 
@@ -172,8 +184,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/produtor/$producerId': {
+      id: '/produtor/$producerId'
+      path: '/$producerId'
+      fullPath: '/produtor/$producerId'
+      preLoaderRoute: typeof ProdutorProducerIdRouteImport
+      parentRoute: typeof ProdutorRoute
+    }
   }
 }
+
+interface ProdutorRouteChildren {
+  ProdutorProducerIdRoute: typeof ProdutorProducerIdRoute
+}
+
+const ProdutorRouteChildren: ProdutorRouteChildren = {
+  ProdutorProducerIdRoute: ProdutorProducerIdRoute,
+}
+
+const ProdutorRouteWithChildren = ProdutorRoute._addFileChildren(
+  ProdutorRouteChildren,
+)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
@@ -181,7 +212,7 @@ const rootRouteChildren: RootRouteChildren = {
   CadastroRoute: CadastroRoute,
   ComoFuncionaRoute: ComoFuncionaRoute,
   LoginRoute: LoginRoute,
-  ProdutorRoute: ProdutorRoute,
+  ProdutorRoute: ProdutorRouteWithChildren,
   ProdutoresRoute: ProdutoresRoute,
 }
 export const routeTree = rootRouteImport
