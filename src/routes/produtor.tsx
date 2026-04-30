@@ -48,7 +48,7 @@ interface ProductRow {
 interface ProducerRow {
   id: string;
   farm_name: string;
-  user_id: string;
+  user_id: string | null;
 }
 
 const emptyForm = {
