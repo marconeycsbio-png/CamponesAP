@@ -26,7 +26,7 @@ import {
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/auth-context";
-import { formatBRL } from "@/contexts/cart-context";
+import { formatBRL } from "@/lib/format";
 
 export const Route = createFileRoute("/produtor")({
   component: ProdutorDashboard,
