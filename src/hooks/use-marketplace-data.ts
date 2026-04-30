@@ -1,95 +1,81 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import {
-  producers as mockProducers,
-  products as mockProducts,
-  type Producer,
-  type Product,
-  type Category,
-} from "@/data/mock";
 
-const CATEGORY_MAP: Record<string, Category> = {
-  frutas: "Frutas",
-  verduras: "Verduras",
-  legumes: "Legumes",
-  outros: "Outros",
-};
+export interface PublicProducer {
+  id: string;
+  farmName: string;
+  description: string;
+  city: string;
+  state: string;
+  rating: number;
+  imageUrl: string | null;
+  whatsapp: string | null;
+  instagram: string | null;
+  email: string | null;
+}
+
+export interface PublicProduct {
+  id: string;
+  producerId: string;
+  name: string;
+  description: string;
+  price: number;
+  unit: string;
+  stock: number;
+  imageUrl: string | null;
+  isOrganic: boolean;
+}
 
 interface MarketplaceData {
-  producers: Producer[];
-  products: Product[];
+  producers: PublicProducer[];
+  products: PublicProduct[];
   loading: boolean;
-  fromDatabase: boolean;
 }
 
 export function useMarketplaceData(): MarketplaceData {
   const [data, setData] = useState<MarketplaceData>({
-    producers: mockProducers,
-    products: mockProducts,
+    producers: [],
+    products: [],
     loading: true,
-    fromDatabase: false,
   });
 
   useEffect(() => {
     let cancelled = false;
 
     async function load() {
-      const [{ data: prods }, { data: prodItems }, { data: cats }] = await Promise.all([
+      const [{ data: prods }, { data: prodItems }] = await Promise.all([
         supabase.from("producers").select("*").eq("status", "ativo"),
         supabase.from("products").select("*").eq("is_active", true),
-        supabase.from("categories").select("*"),
       ]);
 
       if (cancelled) return;
 
-      // se banco vazio, mantém mocks
-      if (!prods || prods.length === 0 || !prodItems || prodItems.length === 0) {
-        setData({
-          producers: mockProducers,
-          products: mockProducts,
-          loading: false,
-          fromDatabase: false,
-        });
-        return;
-      }
-
-      const catById = new Map((cats ?? []).map((c) => [c.id, c.slug]));
-
-      const dbProducers: Producer[] = prods.map((p) => ({
+      const producers: PublicProducer[] = (prods ?? []).map((p) => ({
         id: p.id,
-        name: p.farm_name,
-        farm: p.farm_name,
+        farmName: p.farm_name,
+        description: p.description ?? "",
         city: p.city ?? "",
-        region: p.state ?? "",
-        image: p.image_url || mockProducers[0].image,
+        state: p.state ?? "",
         rating: Number(p.rating ?? 5),
-        reviews: 0,
-        bio: p.description ?? "",
-        distanceKm: 0,
+        imageUrl: p.image_url,
+        whatsapp: p.whatsapp,
+        instagram: p.instagram,
+        email: p.email,
       }));
 
-      const dbProducts: Product[] = prodItems.map((p) => {
-        const slug = p.category_id ? catById.get(p.category_id) : undefined;
-        const category = (slug && CATEGORY_MAP[slug]) || "Outros";
-        return {
-          id: p.id,
-          name: p.name,
-          price: Number(p.price),
-          unit: p.unit,
-          image: p.image_url || mockProducts[0].image,
-          category,
-          producerId: p.producer_id,
-          organic: !!p.is_organic,
-          description: p.description ?? "",
-        };
-      });
+      const products: PublicProduct[] = (prodItems ?? []).map((p) => ({
+        id: p.id,
+        producerId: p.producer_id,
+        name: p.name,
+        description: p.description ?? "",
+        price: Number(p.price),
+        unit: p.unit,
+        stock: p.stock,
+        imageUrl: p.image_url,
+        isOrganic: !!p.is_organic,
+      }));
 
-      setData({
-        producers: dbProducers,
-        products: dbProducts,
-        loading: false,
-        fromDatabase: true,
-      });
+      setData({ producers, products, loading: false });
     }
 
     load();

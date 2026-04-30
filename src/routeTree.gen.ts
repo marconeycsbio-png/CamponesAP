@@ -9,7 +9,6 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as ProdutosRouteImport } from './routes/produtos'
 import { Route as ProdutoresRouteImport } from './routes/produtores'
 import { Route as ProdutorRouteImport } from './routes/produtor'
 import { Route as LoginRouteImport } from './routes/login'
@@ -18,11 +17,6 @@ import { Route as CadastroRouteImport } from './routes/cadastro'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
 
-const ProdutosRoute = ProdutosRouteImport.update({
-  id: '/produtos',
-  path: '/produtos',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const ProdutoresRoute = ProdutoresRouteImport.update({
   id: '/produtores',
   path: '/produtores',
@@ -67,7 +61,6 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/produtor': typeof ProdutorRoute
   '/produtores': typeof ProdutoresRoute
-  '/produtos': typeof ProdutosRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -77,7 +70,6 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/produtor': typeof ProdutorRoute
   '/produtores': typeof ProdutoresRoute
-  '/produtos': typeof ProdutosRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -88,7 +80,6 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/produtor': typeof ProdutorRoute
   '/produtores': typeof ProdutoresRoute
-  '/produtos': typeof ProdutosRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -100,7 +91,6 @@ export interface FileRouteTypes {
     | '/login'
     | '/produtor'
     | '/produtores'
-    | '/produtos'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -110,7 +100,6 @@ export interface FileRouteTypes {
     | '/login'
     | '/produtor'
     | '/produtores'
-    | '/produtos'
   id:
     | '__root__'
     | '/'
@@ -120,7 +109,6 @@ export interface FileRouteTypes {
     | '/login'
     | '/produtor'
     | '/produtores'
-    | '/produtos'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -131,18 +119,10 @@ export interface RootRouteChildren {
   LoginRoute: typeof LoginRoute
   ProdutorRoute: typeof ProdutorRoute
   ProdutoresRoute: typeof ProdutoresRoute
-  ProdutosRoute: typeof ProdutosRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/produtos': {
-      id: '/produtos'
-      path: '/produtos'
-      fullPath: '/produtos'
-      preLoaderRoute: typeof ProdutosRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/produtores': {
       id: '/produtores'
       path: '/produtores'
@@ -203,7 +183,6 @@ const rootRouteChildren: RootRouteChildren = {
   LoginRoute: LoginRoute,
   ProdutorRoute: ProdutorRoute,
   ProdutoresRoute: ProdutoresRoute,
-  ProdutosRoute: ProdutosRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
