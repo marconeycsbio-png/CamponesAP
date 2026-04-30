@@ -109,7 +109,7 @@ function ProdutorDashboard() {
       const { data: created, error } = await supabase
         .from("producers")
         .insert({ user_id: user.id, farm_name: farmName, status: "ativo" })
-        .select("id, farm_name, user_id")
+        .select("*")
         .single();
       if (error) {
         toast.error("Não foi possível criar sua ficha de produtor: " + error.message);
