@@ -1,7 +1,6 @@
 import { Link, useRouterState, useNavigate } from "@tanstack/react-router";
-import { ShoppingBasket, Menu, X, Search, Shield, LogOut, User as UserIcon } from "lucide-react";
+import { Menu, X, Shield, LogOut, User as UserIcon } from "lucide-react";
 import { useState } from "react";
-import { useCart } from "@/contexts/cart-context";
 import { useAuth } from "@/contexts/auth-context";
 import { Button } from "@/components/ui/button";
 import {
@@ -15,13 +14,11 @@ import logo from "@/assets/logo.png";
 
 const NAV = [
   { to: "/", label: "Início" },
-  { to: "/produtos", label: "Produtos" },
   { to: "/produtores", label: "Produtores" },
   { to: "/como-funciona", label: "Como Funciona" },
-];
+] as const;
 
 export function Header() {
-  const { count } = useCart();
   const { user, isAdmin, isProducer, signOut } = useAuth();
   const [open, setOpen] = useState(false);
   const path = useRouterState({ select: (s) => s.location.pathname });
@@ -42,7 +39,7 @@ export function Header() {
           <div className="flex flex-col leading-none">
             <span className="font-display text-xl font-semibold text-primary">Camponês</span>
             <span className="hidden text-[10px] uppercase tracking-[0.2em] text-muted-foreground md:block">
-              Do campo para sua mesa
+              Vitrine de produtores rurais
             </span>
           </div>
         </Link>
@@ -68,19 +65,13 @@ export function Header() {
         </nav>
 
         <div className="flex items-center gap-2">
-          <Link to="/produtos" aria-label="Buscar" className="hidden md:block">
-            <Button variant="ghost" size="icon">
-              <Search className="h-5 w-5" />
-            </Button>
-          </Link>
-
           {!user ? (
             <>
               <Link to="/login" className="hidden md:block">
                 <Button variant="ghost" size="sm">Entrar</Button>
               </Link>
               <Link to="/cadastro" className="hidden md:block">
-                <Button variant="default" size="sm">Criar Conta</Button>
+                <Button variant="default" size="sm">Sou produtor</Button>
               </Link>
             </>
           ) : (
@@ -110,17 +101,6 @@ export function Header() {
             </DropdownMenu>
           )}
 
-          <Link to="/carrinho" aria-label="Carrinho" className="relative">
-            <Button variant="ghost" size="icon">
-              <ShoppingBasket className="h-5 w-5" />
-            </Button>
-            {count > 0 && (
-              <span className="absolute -right-0.5 -top-0.5 flex h-5 min-w-[20px] items-center justify-center rounded-full bg-primary px-1 text-[11px] font-semibold text-primary-foreground shadow-md animate-fade-in">
-                {count}
-              </span>
-            )}
-          </Link>
-
           <button className="lg:hidden" onClick={() => setOpen((v) => !v)} aria-label="Menu">
             {open ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
           </button>
@@ -145,6 +125,11 @@ export function Header() {
                 🛡️ Painel admin
               </Link>
             )}
+            {isProducer && (
+              <Link to="/produtor" onClick={() => setOpen(false)} className="rounded-md px-3 py-3 text-sm font-medium text-primary hover:bg-secondary">
+                Painel produtor
+              </Link>
+            )}
             <div className="mt-2 flex gap-2">
               {!user ? (
                 <>
@@ -152,7 +137,7 @@ export function Header() {
                     <Button variant="outline" className="w-full">Entrar</Button>
                   </Link>
                   <Link to="/cadastro" className="flex-1" onClick={() => setOpen(false)}>
-                    <Button className="w-full">Criar Conta</Button>
+                    <Button className="w-full">Sou produtor</Button>
                   </Link>
                 </>
               ) : (
