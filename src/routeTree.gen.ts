@@ -13,11 +13,7 @@ import { Route as ProdutosRouteImport } from './routes/produtos'
 import { Route as ProdutoresRouteImport } from './routes/produtores'
 import { Route as ProdutorRouteImport } from './routes/produtor'
 import { Route as LoginRouteImport } from './routes/login'
-import { Route as ConfirmacaoRouteImport } from './routes/confirmacao'
 import { Route as ComoFuncionaRouteImport } from './routes/como-funciona'
-import { Route as CheckoutRouteImport } from './routes/checkout'
-import { Route as ChatRouteImport } from './routes/chat'
-import { Route as CarrinhoRouteImport } from './routes/carrinho'
 import { Route as CadastroRouteImport } from './routes/cadastro'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
@@ -42,29 +38,9 @@ const LoginRoute = LoginRouteImport.update({
   path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ConfirmacaoRoute = ConfirmacaoRouteImport.update({
-  id: '/confirmacao',
-  path: '/confirmacao',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const ComoFuncionaRoute = ComoFuncionaRouteImport.update({
   id: '/como-funciona',
   path: '/como-funciona',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const CheckoutRoute = CheckoutRouteImport.update({
-  id: '/checkout',
-  path: '/checkout',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ChatRoute = ChatRouteImport.update({
-  id: '/chat',
-  path: '/chat',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const CarrinhoRoute = CarrinhoRouteImport.update({
-  id: '/carrinho',
-  path: '/carrinho',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CadastroRoute = CadastroRouteImport.update({
@@ -87,11 +63,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
   '/cadastro': typeof CadastroRoute
-  '/carrinho': typeof CarrinhoRoute
-  '/chat': typeof ChatRoute
-  '/checkout': typeof CheckoutRoute
   '/como-funciona': typeof ComoFuncionaRoute
-  '/confirmacao': typeof ConfirmacaoRoute
   '/login': typeof LoginRoute
   '/produtor': typeof ProdutorRoute
   '/produtores': typeof ProdutoresRoute
@@ -101,11 +73,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
   '/cadastro': typeof CadastroRoute
-  '/carrinho': typeof CarrinhoRoute
-  '/chat': typeof ChatRoute
-  '/checkout': typeof CheckoutRoute
   '/como-funciona': typeof ComoFuncionaRoute
-  '/confirmacao': typeof ConfirmacaoRoute
   '/login': typeof LoginRoute
   '/produtor': typeof ProdutorRoute
   '/produtores': typeof ProdutoresRoute
@@ -116,11 +84,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
   '/cadastro': typeof CadastroRoute
-  '/carrinho': typeof CarrinhoRoute
-  '/chat': typeof ChatRoute
-  '/checkout': typeof CheckoutRoute
   '/como-funciona': typeof ComoFuncionaRoute
-  '/confirmacao': typeof ConfirmacaoRoute
   '/login': typeof LoginRoute
   '/produtor': typeof ProdutorRoute
   '/produtores': typeof ProdutoresRoute
@@ -132,11 +96,7 @@ export interface FileRouteTypes {
     | '/'
     | '/admin'
     | '/cadastro'
-    | '/carrinho'
-    | '/chat'
-    | '/checkout'
     | '/como-funciona'
-    | '/confirmacao'
     | '/login'
     | '/produtor'
     | '/produtores'
@@ -146,11 +106,7 @@ export interface FileRouteTypes {
     | '/'
     | '/admin'
     | '/cadastro'
-    | '/carrinho'
-    | '/chat'
-    | '/checkout'
     | '/como-funciona'
-    | '/confirmacao'
     | '/login'
     | '/produtor'
     | '/produtores'
@@ -160,11 +116,7 @@ export interface FileRouteTypes {
     | '/'
     | '/admin'
     | '/cadastro'
-    | '/carrinho'
-    | '/chat'
-    | '/checkout'
     | '/como-funciona'
-    | '/confirmacao'
     | '/login'
     | '/produtor'
     | '/produtores'
@@ -175,11 +127,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdminRoute: typeof AdminRoute
   CadastroRoute: typeof CadastroRoute
-  CarrinhoRoute: typeof CarrinhoRoute
-  ChatRoute: typeof ChatRoute
-  CheckoutRoute: typeof CheckoutRoute
   ComoFuncionaRoute: typeof ComoFuncionaRoute
-  ConfirmacaoRoute: typeof ConfirmacaoRoute
   LoginRoute: typeof LoginRoute
   ProdutorRoute: typeof ProdutorRoute
   ProdutoresRoute: typeof ProdutoresRoute
@@ -216,39 +164,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/confirmacao': {
-      id: '/confirmacao'
-      path: '/confirmacao'
-      fullPath: '/confirmacao'
-      preLoaderRoute: typeof ConfirmacaoRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/como-funciona': {
       id: '/como-funciona'
       path: '/como-funciona'
       fullPath: '/como-funciona'
       preLoaderRoute: typeof ComoFuncionaRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/checkout': {
-      id: '/checkout'
-      path: '/checkout'
-      fullPath: '/checkout'
-      preLoaderRoute: typeof CheckoutRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/chat': {
-      id: '/chat'
-      path: '/chat'
-      fullPath: '/chat'
-      preLoaderRoute: typeof ChatRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/carrinho': {
-      id: '/carrinho'
-      path: '/carrinho'
-      fullPath: '/carrinho'
-      preLoaderRoute: typeof CarrinhoRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/cadastro': {
@@ -279,11 +199,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRoute,
   CadastroRoute: CadastroRoute,
-  CarrinhoRoute: CarrinhoRoute,
-  ChatRoute: ChatRoute,
-  CheckoutRoute: CheckoutRoute,
   ComoFuncionaRoute: ComoFuncionaRoute,
-  ConfirmacaoRoute: ConfirmacaoRoute,
   LoginRoute: LoginRoute,
   ProdutorRoute: ProdutorRoute,
   ProdutoresRoute: ProdutoresRoute,
