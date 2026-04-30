@@ -28,7 +28,7 @@ export function Footer() {
           <h4 className="mb-3 text-sm font-semibold text-foreground">Sou produtor</h4>
           <ul className="space-y-2 text-sm text-muted-foreground">
             <li><Link to="/cadastro" className="hover:text-primary">Cadastrar minha fazenda</Link></li>
-            <li><Link to="/produtor" className="hover:text-primary">Meu painel</Link></li>
+            <li><Link to="/painel" className="hover:text-primary">Meu painel</Link></li>
           </ul>
           <div className="mt-5 flex gap-3 text-muted-foreground">
             <a href="#" aria-label="Instagram" className="hover:text-primary"><Instagram className="h-5 w-5" /></a>

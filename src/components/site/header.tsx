@@ -91,7 +91,7 @@ export function Header() {
                 )}
                 {isProducer && (
                   <DropdownMenuItem asChild>
-                    <Link to="/produtor">Painel produtor</Link>
+                    <Link to="/painel">Painel produtor</Link>
                   </DropdownMenuItem>
                 )}
                 <DropdownMenuItem onClick={handleLogout}>
@@ -126,7 +126,7 @@ export function Header() {
               </Link>
             )}
             {isProducer && (
-              <Link to="/produtor" onClick={() => setOpen(false)} className="rounded-md px-3 py-3 text-sm font-medium text-primary hover:bg-secondary">
+              <Link to="/painel" onClick={() => setOpen(false)} className="rounded-md px-3 py-3 text-sm font-medium text-primary hover:bg-secondary">
                 Painel produtor
               </Link>
             )}
