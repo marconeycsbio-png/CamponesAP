@@ -97,7 +97,7 @@ function ProdutorDashboard() {
     // Busca a ficha de produtor; cria automaticamente se não houver
     let { data: prod } = await supabase
       .from("producers")
-      .select("id, farm_name, user_id")
+      .select("*")
       .eq("user_id", user.id)
       .maybeSingle();
 
