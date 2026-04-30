@@ -81,6 +81,84 @@ function ProdutorDashboard() {
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const profileFileRef = useRef<HTMLInputElement>(null);
+  const [profileForm, setProfileForm] = useState({
+    farm_name: "",
+    description: "",
+    city: "",
+    state: "",
+    image_url: "" as string | null,
+    whatsapp: "",
+    instagram: "",
+    email: "",
+  });
+  const [savingProfile, setSavingProfile] = useState(false);
+  const [uploadingProfile, setUploadingProfile] = useState(false);
+
+  useEffect(() => {
+    if (producer) {
+      setProfileForm({
+        farm_name: producer.farm_name ?? "",
+        description: producer.description ?? "",
+        city: producer.city ?? "",
+        state: producer.state ?? "",
+        image_url: producer.image_url ?? "",
+        whatsapp: producer.whatsapp ?? "",
+        instagram: producer.instagram ?? "",
+        email: producer.email ?? "",
+      });
+    }
+  }, [producer]);
+
+  const handleProfileUpload = async (file: File) => {
+    if (!user) return;
+    setUploadingProfile(true);
+    const ext = file.name.split(".").pop() || "jpg";
+    const path = `${user.id}/profile-${crypto.randomUUID()}.${ext}`;
+    const { error } = await supabase.storage
+      .from("product-images")
+      .upload(path, file, { upsert: false, contentType: file.type });
+    if (error) {
+      toast.error("Erro ao enviar imagem: " + error.message);
+      setUploadingProfile(false);
+      return;
+    }
+    const { data } = supabase.storage.from("product-images").getPublicUrl(path);
+    setProfileForm((f) => ({ ...f, image_url: data.publicUrl }));
+    setUploadingProfile(false);
+    toast.success("Imagem enviada");
+  };
+
+  const handleSaveProfile = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!producer) return;
+    if (!profileForm.farm_name.trim()) {
+      toast.error("Informe o nome da fazenda.");
+      return;
+    }
+    setSavingProfile(true);
+    const { error } = await supabase
+      .from("producers")
+      .update({
+        farm_name: profileForm.farm_name.trim(),
+        description: profileForm.description.trim() || null,
+        city: profileForm.city.trim() || null,
+        state: profileForm.state.trim() || null,
+        image_url: profileForm.image_url || null,
+        whatsapp: profileForm.whatsapp.trim() || null,
+        instagram: profileForm.instagram.trim() || null,
+        email: profileForm.email.trim() || null,
+      })
+      .eq("id", producer.id);
+    setSavingProfile(false);
+    if (error) {
+      toast.error(error.message);
+    } else {
+      toast.success("Perfil atualizado");
+      loadData();
+    }
+  };
+
 
   useEffect(() => {
     if (authLoading) return;
