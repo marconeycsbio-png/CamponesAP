@@ -46,40 +46,49 @@ export type Database = {
           city: string | null
           created_at: string
           description: string | null
+          email: string | null
           farm_name: string
           id: string
           image_url: string | null
+          instagram: string | null
           rating: number | null
           state: string | null
           status: Database["public"]["Enums"]["producer_status"]
           updated_at: string
           user_id: string | null
+          whatsapp: string | null
         }
         Insert: {
           city?: string | null
           created_at?: string
           description?: string | null
+          email?: string | null
           farm_name: string
           id?: string
           image_url?: string | null
+          instagram?: string | null
           rating?: number | null
           state?: string | null
           status?: Database["public"]["Enums"]["producer_status"]
           updated_at?: string
           user_id?: string | null
+          whatsapp?: string | null
         }
         Update: {
           city?: string | null
           created_at?: string
           description?: string | null
+          email?: string | null
           farm_name?: string
           id?: string
           image_url?: string | null
+          instagram?: string | null
           rating?: number | null
           state?: string | null
           status?: Database["public"]["Enums"]["producer_status"]
           updated_at?: string
           user_id?: string | null
+          whatsapp?: string | null
         }
         Relationships: []
       }
